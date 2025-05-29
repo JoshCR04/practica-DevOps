@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test-lint-cypress-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Run Jest tests with coverage
+      run: npm test
+
+    - name: Start simple HTTP server
+      run: npx http-server -p 8080 &
+      
+    - name: Run Cypress tests
+      run: npm run cypress:run
+
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main' && success()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./ # (aquí asume que los archivos para deploy están en la raíz, ajusta si es necesario)
