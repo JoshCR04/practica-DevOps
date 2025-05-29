@@ -17,4 +17,7 @@ document.getElementById('checkBtn').addEventListener('click', () => {
   }
 });
 
-module.exports = { esPar };
+// Exportar función para testeo
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { esPar };
+}

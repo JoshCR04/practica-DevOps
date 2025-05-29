@@ -14,3 +14,4 @@ describe('Página principal', () => {
     cy.get('#result').should('contain', 'No es par');
   });
 });
+
